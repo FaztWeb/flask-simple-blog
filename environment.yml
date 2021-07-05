@@ -1,0 +1,31 @@
+name: flask-app
+channels:
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - ca-certificates=2021.5.25=h06a4308_1
+  - certifi=2020.12.5=py39h06a4308_0
+  - ld_impl_linux-64=2.33.1=h53a641e_7
+  - libffi=3.3=he6710b0_2
+  - libgcc-ng=9.1.0=hdf63c60_0
+  - libstdcxx-ng=9.1.0=hdf63c60_0
+  - ncurses=6.2=he6710b0_1
+  - openssl=1.1.1k=h27cfd23_0
+  - pip=21.1.1=py39h06a4308_0
+  - python=3.9.5=hdb3f193_3
+  - readline=8.1=h27cfd23_0
+  - setuptools=52.0.0=py39h06a4308_0
+  - sqlite=3.35.4=hdfb4753_0
+  - tk=8.6.10=hbc83047_0
+  - tzdata=2020f=h52ac0ba_0
+  - wheel=0.36.2=pyhd3eb1b0_0
+  - xz=5.2.5=h7b6447c_0
+  - zlib=1.2.11=h7b6447c_3
+  - pip:
+    - click==8.0.1
+    - flask==2.0.1
+    - itsdangerous==2.0.1
+    - jinja2==3.0.1
+    - markupsafe==2.0.1
+    - werkzeug==2.0.1
+prefix: /home/fazt/anaconda3/envs/flask-app
