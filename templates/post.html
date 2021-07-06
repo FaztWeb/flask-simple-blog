@@ -2,6 +2,14 @@
 
 {% block body %}
 
-<h1>{{id}}</h1>
+<h1>{{post.title}}</h1>
+<small>Wrriten by {{post.author}} on {{post.created_at}}</small>
+<hr>
+
+<div class="row">
+  <div class="col">
+    {{post.content | safe}}
+  </div>
+</div>
 
 {% endblock %}

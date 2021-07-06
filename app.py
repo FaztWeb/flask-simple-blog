@@ -9,14 +9,11 @@ from flask import (
     request,
 )
 
-from posts import Posts
-
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from wtforms.fields.html5 import EmailField
 from passlib.hash import sha256_crypt
-
-posts = Posts()
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -25,7 +22,9 @@ app.config["MYSQL_HOST"] = "127.0.0.1"
 app.config["MYSQL_USER"] = "root"
 app.config["MYSQL_PASSWORD"] = "faztpassword"
 app.config["MYSQL_DB"] = "flaskblog"
-app.config["MYSQL_CURSORCLASS"] = "DictCursor" # to return a dictionary instead of a tuple
+app.config[
+    "MYSQL_CURSORCLASS"
+] = "DictCursor"  # to return a dictionary instead of a tuple
 
 # init mysql
 mysql = MySQL(app)
@@ -43,12 +42,26 @@ def about():
 
 @app.route("/posts")
 def postsPage():
-    return render_template("posts.html", posts=posts)
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT * FROM posts")
+    posts = cur.fetchall()
+    cur.close()
+
+    if result > 0:
+        return render_template("posts.html", posts=posts)
+    else:
+        msg = "No posts found"
+        return render_template("posts.html", msg=msg)
 
 
 @app.route("/posts/<string:id>")
 def postPage(id):
-    return render_template("post.html", id=id)
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT * FROM posts WHERE id = %s", [id])
+    post = cur.fetchone()
+    cur.close()
+
+    return render_template("post.html", post=post)
 
 
 class RegisterForm(Form):
@@ -83,44 +96,107 @@ def register():
 
         mysql.connection.commit()
         cur.close()
-        flash('You are now register and can login', 'success')
-        redirect(url_for('login'))
+        flash("You are now register and can login", "success")
+        redirect(url_for("login"))
     return render_template("register.html", form=form)
 
-@app.route('/login', methods=['GET', 'POST'])
+
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+
         cur = mysql.connection.cursor()
 
-        result = cur.execute('SELECT * FROM users WHERE username = %s', [username])
+        result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
 
         if result > 0:
             data = cur.fetchone()
-            saved_password = data['password']
-
-            if sha256_crypt.verify(password, saved_password):
-                session['logged_in'] = True
-                session['username'] = data['username'] 
-                flash("You're now logged in", "success")
-                return redirect(url_for('dashboard'))
-            else:
-                error = 'User not foudn'
-                return render_template('login.html', error = error)
+            saved_password = data["password"]
             cur.close()
 
+            if sha256_crypt.verify(password, saved_password):
+                session["logged_in"] = True
+                session["username"] = data["username"]
+                flash("You're now logged in", "success")
+                return redirect(url_for("dashboard"))
+            else:
+                error = "User not foudn"
+                return render_template("login.html", error=error)
+
         else:
-            error = 'User not foudn'
-            return render_template('login.html', error = error)
+            error = "User not foudn"
+            return render_template("login.html", error=error)
 
-    return render_template('login.html')
+    return render_template("login.html")
 
-@app.route('/dashboard')
+
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if "logged_in" in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Unauthorized. Login first", "danger")
+            return redirect(url_for("login"))
+
+    return wrap
+
+
+@app.route("/dashboard")
+@is_logged_in
 def dashboard():
-    return render_template('dashboard.html')
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT * FROM posts")
+    posts = cur.fetchall()
+    cur.close()
+
+    if result > 0:
+        return render_template("dashboard.html", posts=posts)
+    else:
+        msg = "No articles found"
+        return render_template("dashboard.html", msg=msg)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("you are now logged out", "success")
+    return redirect(url_for("login"))
+
+
+class ArticleForm(Form):
+    title = StringField("Title", [validators.Length(min=1, max=200)])
+    content = TextAreaField("Content", [validators.Length(min=30)])
+
+
+@app.route("/add_post", methods=["GET", "POST"])
+@is_logged_in
+def add_post():
+    form = ArticleForm(request.form)
+    if request.method == "POST" and form.validate():
+        title = form.title.data
+        content = form.content.data
+
+        print("llegoo")
+        print(title)
+        print(content)
+
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "INSERT INTO posts (title, content, author) VALUES(%s, %s, %s)",
+            (title, content, session["username"]),
+        )
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Post saved", "success")
+        redirect(url_for("dashboard"))
+
+    return render_template("add_article.html", form=form)
+
 
 if __name__ == "__main__":
-    app.secret_key="somsecretkey"
+    app.secret_key = "somsecretkey"
     app.run(debug=True, port=3000)
