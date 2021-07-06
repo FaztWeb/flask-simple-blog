@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<h1 class="text-center my-4">Posts</h1>
+
+<div class="row">
+
+	{% for post in posts %}
+	<div class="col-md-4">
+		<div class="card bg-dark text-light">
+			<img src="{{url_for('static', filename = "images/no_post_image.jpeg")}}" alt="no post image" class="card-img-top">
+			<div class="card-body p-5">
+				<h1 class="h4">{{post.title}}</h1>
+	<p>{{post.content | safe | truncate(120) }}</p>
+				<a href="posts/{{post.id}}" class="btn btn-primary">Read More</a>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+{% endblock %}

@@ -2,18 +2,27 @@
 
 {% block body %}
 
-<h1>Edit Article</h1>
+<form method="POST" class="row">
+	<div class="d-flex justify-content-between align-items-center">
 
-{% from 'includes/_formhelpers.html' import render_field %}
+<h1>Edit Post </h1>
+		<button class="btn btn-success">Update</button>
+	</div>
+	{% from 'includes/_formhelpers.html' import render_field %}
+	<div class="col-md-4">
+		<input type="file">
+		<div class="mb-2">
+			{{render_field(form.title, class="form-control")}}
+		</div>
 
-<form method="POST">
-	<div class="mb-2">
-		{{render_field(form.title, class="form-control")}}
 	</div>
-	<div class="mb-2">
-		{{render_field(form.content, class="form-control", id="editor")}}
+
+	<div class="col-md-8">
+
+		<div class="mb-2">
+			{{render_field(form.content, class="form-control", id="editor")}}
+		</div>
 	</div>
-	<button class="btn btn-success">Update</button>
 </form>
 
 {% endblock %}

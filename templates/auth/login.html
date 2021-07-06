@@ -2,31 +2,43 @@
 
 {% block body %}
 
-<h1>Login</h1>
+<div class="col-md-4 offset-md-4">
 
-<form action="/login" method="POST">
-  <div class="mb-2">
-    <label>Username:</label>
-    <input
-      type="text"
-      name="username"
-      class="form-control"
-      value="{{request.form.username}}"
-    />
+  <div class="card bg-dark text-light">
+    <div class="card-body p-5">
+
+      <h1 class="h2 mb-4">Login</h1>
+
+      <form action="/login" method="POST">
+        <div class="mb-2">
+          <label>Username:</label>
+          <input
+            type="text"
+            name="username"
+            class="form-control bg-dark text-light rounded-0 border-secondary"
+            value="{{request.form.username}}"
+            placeholder="Write your Username"
+            autofocus
+            />
+        </div>
+        <div class="mb-2">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control bg-dark text-light rounded-0 border-secondary"
+            placeholder="Write your password"
+            value="{{request.form.password}}"
+            />
+        </div>
+        <div class="mb-2">
+        <button class="btn btn-primary rounded-0">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <div class="mb-2">
-    <label for="password">Password:</label>
-    <input
-      type="password"
-      id="password"
-      name="password"
-      class="form-control"
-      placeholder="Write your password"
-      value="{{request.form.password}}"
-    />
-  </div>
-	<button class="btn btn-primary">Save</button>
-</form>
+</div>
 
 {% endblock %}
 

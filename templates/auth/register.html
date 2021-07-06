@@ -2,18 +2,25 @@
 
 {% block body %}
 
-<h1>Register</h1>
+<div class="col-md-4 offset-md-4">
+	<div class="card rounded-0">
+		<div class="card-body bg-dark text-light">
 
-{% from "includes/_formhelpers.html" import render_field %}
+			<h1>Register</h1>
 
-<form method="POST" class="card card-body bg-primary text-light">
-	{{render_field(form.name, class="form-control mb-2")}}
-	{{render_field(form.email, class="form-control mb-2")}}
-	{{render_field(form.username, class="form-control mb-2")}}
-	{{render_field(form.password, class="form-control mb-2")}}
-	{{render_field(form.confirm, class="form-control mb-2")}}
+			{% from "includes/_formhelpers.html" import render_field %}
 
-	<button class="btn btn-primary">Save</button>
-</form>
+			<form method="POST"">
+			{{render_field(form.name, class="form-control mb-2 bg-dark text-light", placeholder="Write your FullName", autofocus="true")}}
+			{{render_field(form.email, class="form-control mb-2 bg-dark text-light")}}
+			{{render_field(form.username, class="form-control mb-2 bg-dark text-light")}}
+			{{render_field(form.password, class="form-control mb-2 bg-dark text-light")}}
+			{{render_field(form.confirm, class="form-control mb-2 bg-dark text-light")}}
+
+			<button class="btn btn-primary">Save</button>
+			</form>
+		</div>
+	</div>
+</div>
 
 {% endblock %}

@@ -21,7 +21,7 @@
 					edit
 				</span>
 			</a>
-			<form action="{{url_for('delete_post', id=post.id)}}" method="POST">
+			<form action="{{url_for('posts.delete_post', id=post.id)}}" method="POST">
 				<input type="hidden" name="_method" value="DELETE">
 				<button class="btn btn-danger">
 					<span class="material-icons">
