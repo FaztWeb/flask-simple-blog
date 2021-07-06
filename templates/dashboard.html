@@ -2,34 +2,37 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<h1>dashboard <small>Welcome {{session.username}}</small></h1>
 
-<a href="/add_post" class="btn btn-success">Add Post</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h1 class="h5">Welcome to your dashboard, <small class="text-capitalize fs-4">{{session.username}}</small></h1>
+	<a href="/add_post" class="btn btn-success">Add Post</a>
+</div>
 
-<table class="table table-dark table-bordered">
-	<thead>
-	<tr>
-		<td>ID</td>
-		<td>title</td>
-		<td>author</td>
-		<td>date</td>
-		<td></td>
-	</tr>
-	</thead>
-	<tbody>
+<ul class="list-group">
 	{% for post in posts %}
-		<tr>
-			<td>{{post.id}}</td>
-			<td>{{post.title}}</td>
-			<td>{{post.author}}</td>
-			<td>{{post.created_at}}</td>
-			<td>
-				<a href="edit_post/{{post.id}}" class="btn btn-secondary">edit</a>
-				<a href="delete_post/{{post.id}}" class="btn btn-danger">delete</a>
-			</td>
-		</tr>
+	<li class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+		<div>
+			<h3 class="h5">{{post.title}}</h3>
+			<p class="text-muted">Created by {{post.author}} on {{post.created_at}}</p>
+		</div>
+		<div class="d-flex">
+			<a href="/edit_post/{{post.id}}" class="btn btn-secondary">
+				<span class="material-icons">
+					edit
+				</span>
+			</a>
+			<form action="{{url_for('delete_post', id=post.id)}}" method="POST">
+				<input type="hidden" name="_method" value="DELETE">
+				<button class="btn btn-danger">
+					<span class="material-icons">
+						delete
+					</span>
+				</button>
+			</form>
+		</div>
+	</li>
 	{% endfor %}
-	</tbody>
-</table>
+
+</ul>
 
 {% endblock %}

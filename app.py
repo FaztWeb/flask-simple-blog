@@ -15,7 +15,11 @@ from wtforms.fields.html5 import EmailField
 from passlib.hash import sha256_crypt
 from functools import wraps
 
+# routes
+from pages import pages
+
 app = Flask(__name__)
+app.register_blueprint(pages)
 
 # mysql settings
 app.config["MYSQL_HOST"] = "127.0.0.1"
@@ -28,16 +32,6 @@ app.config[
 
 # init mysql
 mysql = MySQL(app)
-
-
-@app.route("/")
-def index():
-    return render_template("home.html")
-
-
-@app.route("/about")
-def about():
-    return render_template("about.html")
 
 
 @app.route("/posts")
@@ -60,7 +54,6 @@ def postPage(id):
     result = cur.execute("SELECT * FROM posts WHERE id = %s", [id])
     post = cur.fetchone()
     cur.close()
-
     return render_template("post.html", post=post)
 
 
@@ -179,10 +172,6 @@ def add_post():
         title = form.title.data
         content = form.content.data
 
-        print("llegoo")
-        print(title)
-        print(content)
-
         cur = mysql.connection.cursor()
         cur.execute(
             "INSERT INTO posts (title, content, author) VALUES(%s, %s, %s)",
@@ -195,6 +184,53 @@ def add_post():
         redirect(url_for("dashboard"))
 
     return render_template("add_article.html", form=form)
+
+
+@app.route("/edit_post/<id>", methods=["GET", "POST"])
+@is_logged_in
+def edit_post(id):
+
+    cur = mysql.connection.cursor()
+    result = cur.execute("SELECT * FROM posts WHERE id = %s", [id])
+    post = cur.fetchone()
+    mysql.connection.commit()
+    cur.close()
+
+    form = ArticleForm(request.form)
+
+    # populate values in the form
+    form.title.data = post["title"]
+    form.content.data = post["content"]
+
+    if request.method == "POST" and form.validate():
+        title = request.form["title"]
+        content = request.form["content"]
+
+        cur = mysql.connection.cursor()
+
+        cur.execute(
+            "UPDATE posts SET title = %s, content = %s WHERE id = %s",
+            (title, content, id),
+        )
+        mysql.connection.commit()
+        cur.close()
+
+        flash("Post updated", "success")
+        return redirect(url_for("dashboard"))
+
+    return render_template("edit_post.html", form=form)
+
+
+@app.route("/delete_post/<string:id>", methods=["POST"])
+@is_logged_in
+def delete_post(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM posts WHERE id = %s", [id])
+    mysql.connection.commit()
+    cur.close()
+
+    flash("Article deleted", "sucess")
+    return redirect(url_for("dashboard"))
 
 
 if __name__ == "__main__":
