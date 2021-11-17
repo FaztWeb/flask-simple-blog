@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, flash, redirect, url_for
-from extensions.mysql import mysql
+from utils.mysql import mysql
 from middlewares.is_authenticated import is_authenticated
 from models.post_form import PostForm
 
@@ -24,7 +24,7 @@ def render_posts():
 @is_authenticated
 def render_post(id):
     cur = mysql.connection.cursor()
-    result = cur.execute("SELECT * FROM posts WHERE id = %s", [id])
+    cur.execute("SELECT * FROM posts WHERE id = %s", [id])
     post = cur.fetchone()
     cur.close()
     return render_template("posts/post.html", post=post)
@@ -33,7 +33,7 @@ def render_post(id):
 @posts_blueprint.route("/add_post", methods=["GET", "POST"])
 @is_authenticated
 def add_post():
-    form = ArticleForm(request.form)
+    form = PostForm(request.form)
     if request.method == "POST" and form.validate():
         title = form.title.data
         content = form.content.data
@@ -57,7 +57,7 @@ def add_post():
 def edit_post(id):
 
     cur = mysql.connection.cursor()
-    result = cur.execute("SELECT * FROM posts WHERE id = %s", [id])
+    cur.execute("SELECT * FROM posts WHERE id = %s", [id])
     post = cur.fetchone()
     mysql.connection.commit()
     cur.close()

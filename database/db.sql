@@ -1,6 +1,6 @@
-CREATE DATABASE flaskblog;
+CREATE DATABASE blogdb;
 
-USE flaskblog;
+USE blogdb;
 
 CREATE TABLE users(
 	id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -9,7 +9,7 @@ CREATE TABLE users(
 	password VARCHAR(100),
 	email VARCHAR(100),
 	register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 CREATE TABLE posts(
 	id INT(11) AUTO_INCREMENT PRIMARY KEY,

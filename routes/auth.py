@@ -1,9 +1,10 @@
 from flask import Blueprint, request, session, flash, redirect, url_for, render_template
 from passlib.hash import sha256_crypt
-from extensions.mysql import mysql
+from utils.mysql import mysql
 from models.register_form import RegisterForm
 
 auth_blueprint = Blueprint("auth", __name__)
+
 
 @auth_blueprint.route("/register", methods=["GET", "POST"])
 def register():

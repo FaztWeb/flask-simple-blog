@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template
-from extensions.mysql import mysql
+from utils.mysql import mysql
 from middlewares.is_authenticated import is_authenticated
 
 dashboard_blueprint = Blueprint("dashboard", __name__)
+
 
 @dashboard_blueprint.route("/dashboard")
 @is_authenticated
@@ -17,6 +18,3 @@ def dashboard():
     else:
         msg = "No articles found"
         return render_template("dashboard.html", msg=msg)
-
-
-

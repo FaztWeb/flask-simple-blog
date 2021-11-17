@@ -3,22 +3,32 @@
 {% block body %}
 
 <div class="col-md-4 offset-md-4">
-	<div class="card rounded-0">
-		<div class="card-body bg-dark text-light">
+	<div class="card rounded-0 bg-dark text-light p-4">
+		<div class="card-body">
 
 			<h1>Register</h1>
 
 			{% from "includes/_formhelpers.html" import render_field %}
 
 			<form method="POST"">
-			{{render_field(form.name, class="form-control mb-2 bg-dark text-light", placeholder="Write your FullName", autofocus="true")}}
-			{{render_field(form.email, class="form-control mb-2 bg-dark text-light")}}
-			{{render_field(form.username, class="form-control mb-2 bg-dark text-light")}}
-			{{render_field(form.password, class="form-control mb-2 bg-dark text-light")}}
-			{{render_field(form.confirm, class="form-control mb-2 bg-dark text-light")}}
+			
+				{{render_field(form.name, class="form-control mb-3 bg-dark text-light", placeholder="Write your FullName", autofocus="true")}}
 
-			<button class="btn btn-primary">Save</button>
+			{{render_field(form.email, class="form-control mb-3 bg-dark text-light")}}
+
+			{{render_field(form.username, class="form-control mb-3 bg-dark text-light")}}
+			
+			{{render_field(form.password, class="form-control mb-3 bg-dark text-light")}}
+			
+			{{render_field(form.confirm, class="form-control mb-3 bg-dark text-light")}}
+
+			<div class="mb-3">
+				<button class="btn btn-primary">Save</button>
+			</div>
+
 			</form>
+      <p>Do you have an account? <a href="/login">Login</a></p>
+
 		</div>
 	</div>
 </div>

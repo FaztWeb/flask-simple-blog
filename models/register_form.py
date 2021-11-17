@@ -1,5 +1,6 @@
 from wtforms import Form, StringField, PasswordField, validators
-from wtforms.fields.html5 import EmailField
+from wtforms.fields.simple import EmailField
+
 
 class RegisterForm(Form):
     name = StringField("Name", [validators.Length(min=1, max=50)])

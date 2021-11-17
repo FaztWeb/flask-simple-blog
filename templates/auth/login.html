@@ -3,14 +3,12 @@
 {% block body %}
 
 <div class="col-md-4 offset-md-4">
-
   <div class="card bg-dark text-light">
     <div class="card-body p-5">
-
       <h1 class="h2 mb-4">Login</h1>
 
       <form action="/login" method="POST">
-        <div class="mb-2">
+        <div class="mb-3">
           <label>Username:</label>
           <input
             type="text"
@@ -19,9 +17,9 @@
             value="{{request.form.username}}"
             placeholder="Write your Username"
             autofocus
-            />
+          />
         </div>
-        <div class="mb-2">
+        <div class="mb-3">
           <label for="password">Password:</label>
           <input
             type="password"
@@ -30,15 +28,15 @@
             class="form-control bg-dark text-light rounded-0 border-secondary"
             placeholder="Write your password"
             value="{{request.form.password}}"
-            />
+          />
         </div>
-        <div class="mb-2">
-        <button class="btn btn-primary rounded-0">Save</button>
+        <div class="mb-3">
+          <button class="btn btn-primary rounded-0">Save</button>
         </div>
       </form>
+      <p>Don't have an account? <a href="/register">Register</a></p>
     </div>
   </div>
 </div>
 
 {% endblock %}
-

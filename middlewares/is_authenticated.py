@@ -1,6 +1,7 @@
 from flask import flash, redirect, url_for, session
 from functools import wraps
 
+
 def is_authenticated(f):
     @wraps(f)
     def wrap(*args, **kwargs):
